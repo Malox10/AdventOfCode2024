@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_PARAMETER", "UNUSED_VARIABLE")
+
 fun main() {
     val name = "Day"
     fun parse(input: List<String>) {
