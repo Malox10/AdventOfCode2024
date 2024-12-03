@@ -7,6 +7,7 @@ I've added my own [TemplateGenerator](https://github.com/Malox10/AdventOfCode202
 - change the `name` variable in [`DayTemplateGenerator.kt`](https://github.com/Malox10/AdventOfCode2024/blob/ee55872ddc1c3d90b6ac3837723f0bf9f732017c/src/DayTemplateGenerator.kt)
 - run it
 
+Please be mindful of API limits 
 
 [aoc]: https://adventofcode.com
 
