@@ -28,14 +28,10 @@ fun main() {
         return left.entries.sumOf { (key, count) -> key * count * (right[key] ?: 0) }
     }
 
-
-
-    // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("${name}Test")
     check(part1(testInput) == 11)
     check(part2(testInput) == 31)
 
-    // Read the input from the `src/Day01.txt` file.
     val input = readInput(name)
     part1(input).println()
     part2(input).println()

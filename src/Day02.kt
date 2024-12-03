@@ -3,9 +3,8 @@ import kotlin.math.sign
 
 fun main() {
     val name = "Day02"
-    //128 too low
 
-    fun parse(input: List<String>): List<Level<Int>> {
+    fun parse(input: List<String>): List<Level> {
         return input.map { line ->
             line.split(" ")
                 .filter { it.isNotEmpty() }
@@ -13,7 +12,7 @@ fun main() {
         }
     }
 
-    fun Level<Int>.isSafe() = this.windowed(2).map { (a, b) ->
+    fun Level.isSafe() = this.windowed(2).map { (a, b) ->
         val diff = a - b
         if (diff.absoluteValue > 3 || diff == 0) return false
         diff.sign
@@ -42,4 +41,4 @@ fun main() {
     part2(input).println()
 }
 
-typealias Level<T> = List<T>
+typealias Level = List<Int>
