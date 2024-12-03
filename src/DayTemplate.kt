@@ -23,6 +23,6 @@ fun main() {
 //    check(part2(testInput) == 1)
 
     val input = readInput(name)
-    part1(input).println()
-    part2(input).println()
+    "part1: ${part1(input)}".println()
+    "part2: ${part2(input)}".println()
 }
