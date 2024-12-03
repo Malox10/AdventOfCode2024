@@ -1,25 +1,13 @@
 # AdventOfCode2024
 
-Welcome to the Advent of Code[^aoc] Kotlin project created by [malox10][github] using the [Advent of Code Kotlin Template][template] delivered by JetBrains.
+Welcome to the My [Advent of Code][aoc] Kotlin repo using the [Advent of Code Kotlin Template][template]
 
-In this repository, malox10 is about to provide solutions for the puzzles using [Kotlin][kotlin] language.
+I've added my own [TemplateGenerator](https://github.com/Malox10/AdventOfCode2024/blob/ee55872ddc1c3d90b6ac3837723f0bf9f732017c/src/DayTemplateGenerator.kt) which will automatically create templates, download the input and create an empty test input file
+- add your secret (a hexadecimal string stored in the cookie, sent with requests to the AoC website. You can find this via the developer Console) to `secret.txt`
+- change the `name` variable in [`DayTemplateGenerator.kt`](https://github.com/Malox10/AdventOfCode2024/blob/ee55872ddc1c3d90b6ac3837723f0bf9f732017c/src/DayTemplateGenerator.kt)
+- run it
 
-If you're stuck with Kotlin-specific questions or anything related to this template, check out the following resources:
-
-- [Kotlin docs][docs]
-- [Kotlin Slack][slack]
-- Template [issue tracker][issues]
-
-
-[^aoc]:
-    [Advent of Code][aoc] – An annual event of Christmas-oriented programming challenges started December 2015.
-    Every year since then, beginning on the first day of December, a programming puzzle is published every day for twenty-five days.
-    You can solve the puzzle and provide an answer using the language of your choice.
 
 [aoc]: https://adventofcode.com
-[docs]: https://kotlinlang.org/docs/home.html
-[github]: https://github.com/malox10
-[issues]: https://github.com/kotlin-hands-on/advent-of-code-kotlin-template/issues
-[kotlin]: https://kotlinlang.org
-[slack]: https://surveys.jetbrains.com/s3/kotlin-slack-sign-up
+
 [template]: https://github.com/kotlin-hands-on/advent-of-code-kotlin-template
