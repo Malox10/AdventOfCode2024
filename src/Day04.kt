@@ -3,12 +3,11 @@ fun main() {
         return input.map { line -> line.map { it } }
     }
 
-    val offsets: List<Offsets> = listOf(
+    val allOffsets: List<Offsets> = listOf(
         listOf(0 to 0, 0 to 1, 0 to 2, 0 to 3), //horizontal
         listOf(0 to 0, 1 to 0, 2 to 0, 3 to 0), //vertical
         listOf(0 to 0, 1 to 1, 2 to 2, 3 to 3), //diagonal NE
         listOf(0 to 0, 1 to -1, 2 to -2, 3 to -3) //diagonal NW
-//    ).flatMap { listOf(it, it.reversed()) }
     ).flatMap { listOf(it, it.map { (a, b) -> -a to -b }) } //easier debugging to make coords negative
 
     fun part1(input: List<String>): Int {
@@ -17,9 +16,10 @@ fun main() {
 
         for (row in grid.indices) {
             for (col in grid.first().indices) {
-                offsets.map { offset ->
-                    val string = offset.map { (rowOffset, colOffset) ->
-                        grid.getOrNull(row + rowOffset)?.getOrNull(col + colOffset) ?: ' '
+                val currentPosition = row to col
+                allOffsets.map { offsets ->
+                    val string = offsets.map { offset ->
+                        grid[currentPosition + offset] ?: ' '
                     }.joinToString("")
                     if(string == "XMAS") count++
                 }
