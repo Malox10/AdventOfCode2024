@@ -22,6 +22,7 @@ fun<T> checkDebug(actual: T, expected: T) {
 fun<T, R> Pair<T, T>.map(block: (T) -> R) = block(this.first) to block(this.second)
 operator fun Pair<Int, Int>.plus(other: Pair<Int, Int>) = first + other.first to second + other.second
 operator fun Pair<Int, Int>.minus(other: Pair<Int, Int>) = first - other.first to second - other.second
+operator fun Pair<Int, Int>.times(other: Int) = first * other to second * other
 operator fun<T> List<List<T>>.get(pair: Pair<Int, Int>): T? = this.getOrNull(pair.first)?.getOrNull(pair.second)
 class LoopedList<T>(inner: List<T>) {
     private var pointer = 0
