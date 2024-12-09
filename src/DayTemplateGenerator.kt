@@ -6,12 +6,12 @@ import java.net.http.HttpResponse
 import java.net.http.HttpResponse.BodyHandlers
 
 
-const val name = "04"
+const val name = "09"
 fun main() {
     val fullName = "Day$name"
 
     createDay(fullName)
-    createTestFiles(fullName, name.toInt())
+    createFiles(fullName, name.toInt())
 }
 
 fun createDay(name: String) {
@@ -50,7 +50,7 @@ fun createDay(name: String) {
     file.writeText(template)
 }
 
-fun createTestFiles(name: String, day: Int) {
+fun createFiles(name: String, day: Int) {
     val input = File("src/input/$name.txt")
     input.createNewFile()
     input.writeText(getInput(day))
