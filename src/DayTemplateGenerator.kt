@@ -6,7 +6,7 @@ import java.net.http.HttpResponse
 import java.net.http.HttpResponse.BodyHandlers
 
 
-const val name = "09"
+const val name = "10"
 fun main() {
     val fullName = "Day$name"
 
@@ -46,7 +46,6 @@ fun createDay(name: String) {
     "part1: $part1".println()
     "part2: $part2".println()
 }"""
-    template.println()
     file.writeText(template)
 }
 

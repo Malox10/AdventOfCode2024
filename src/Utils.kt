@@ -35,3 +35,5 @@ class LoopedList<T>(inner: List<T>) {
         return element
     }
 }
+
+typealias Point = Pair<Int, Int>
