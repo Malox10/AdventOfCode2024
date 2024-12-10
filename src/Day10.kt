@@ -2,41 +2,47 @@ fun main() {
     fun parse(input: List<String>): List<List<Int>> = input.map { it.map { char -> char.digitToInt() } }
 
     val offsets = listOf(-1 to 0, 0 to 1, 1 to 0, 0 to -1)
-    fun findNeighbours(start: Point, height: Int, grid: List<List<Int>>)
-        = offsets.map { offset -> start + offset }.filter { grid[it] == height + 1 }
+    fun List<List<Int>>.findNeighbours(start: Point, height: Int)
+        = offsets.map { offset -> start + offset }.filter { this[it] == height + 1 }
 
-
-    fun findPaths(start: Point, grid: List<List<Int>>): Set<Point> {
-        val height = grid[start] ?: throw Error("starting point $start not in grid")
-        if(height == 9) return setOf(start)
-        val neighbours = findNeighbours(start, height, grid)
-
-        return neighbours.flatMap { neighbour ->
-            findPaths(neighbour, grid)
-        }.toSet()
-    }
-
-
-
-    fun part1(input: List<String>): Int {
-
-
-        val maze = parse(input)
-        val starts = maze.flatMapIndexed { rowIndex, row ->
+    fun List<List<Int>>.findStartingPoints(): List<Point> {
+        return this.flatMapIndexed { rowIndex, row ->
             row.mapIndexedNotNull { colIndex, value ->
                 if(value == 0) rowIndex to colIndex else null
             }
         }
+    }
 
-        return starts.sumOf { findPaths(it, maze).count() }
+    fun List<List<Int>>.findPaths(start: Point): Set<Point> {
+        val height = this[start] ?: throw Error("starting point $start not in grid")
+        if(height == 9) return setOf(start)
+        val neighbours = findNeighbours(start, height)
+
+        return neighbours.flatMap { neighbour ->
+            findPaths(neighbour)
+        }.toSet()
+    }
+
+    fun part1(input: List<String>): Int {
+        val grid = parse(input)
+        val starts = grid.findStartingPoints()
+        return starts.sumOf { grid.findPaths(it).count() }
+    }
+
+    fun List<List<Int>>.findPathsPart2(start: Point, path: List<Point> = emptyList()): List<Path> {
+        val height = this[start] ?: throw Error("starting point $start not in grid")
+        if(height == 9) return listOf(path)
+        val neighbours = findNeighbours(start, height)
+        return neighbours.flatMap { neighbour: Point ->
+            findPathsPart2(neighbour, path + neighbour)
+        }
     }
 
     fun part2(input: List<String>): Int {
-        val x = parse(input)
-        return input.size
+        val grid = parse(input)
+        val starts = grid.findStartingPoints()
+        return starts.sumOf { grid.findPathsPart2(it).count() }
     }
-
-
 
     val testInput = readInput("Day10Test")
     checkDebug(part1(testInput), 36)
@@ -46,3 +52,5 @@ fun main() {
     "part1: ${part1(input)}".println()
     "part2: ${part2(input)}".println()
 }
+
+typealias Path = List<Point>
