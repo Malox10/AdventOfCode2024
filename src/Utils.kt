@@ -37,3 +37,10 @@ class LoopedList<T>(inner: List<T>) {
 }
 
 typealias Point = Pair<Int, Int>
+fun<T> Iterable<T>.counts() = this.toSet().associateWith { number -> this.count { it == number } }
+enum class Direction(val offset: Point) {
+    North(-1 to 0),
+    East(0 to 1),
+    South(1 to 0),
+    West(0 to -1)
+}

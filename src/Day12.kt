@@ -10,6 +10,7 @@ fun main() {
         val closedInsideArea = mutableSetOf<Point>()
 //        val edgePoints = mutableSetOf<Point>()
         var edges = 0
+        val edgeList = mutableListOf<Point>()
 
         val queue = ArrayDeque<Point>()
         queue.add(point)
@@ -21,8 +22,8 @@ fun main() {
                 !queue.contains(it) && !closedInsideArea.contains(it) // && !edgePoints.contains(it)
             }.forEach { neighbour ->
 //                val neighbourChar = grid[neighbour] ?: return@forEach {}.let { edgePoints.add(neighbour) }
-                                val neighbourChar = grid[neighbour] ?: return@forEach {}.let { edges++ }
-                if(neighbourChar == char) queue.add(neighbour) else edges++
+                                val neighbourChar = grid[neighbour] ?: return@forEach {}.let { edges++; edgeList.add(neighbour) }
+                if(neighbourChar == char) queue.add(neighbour) else { edges++; edgeList.add(neighbour) }
             }
             closedInsideArea.add(currentPoint)
         }
@@ -51,16 +52,8 @@ fun main() {
         return totalCost
     }
 
-    fun part2(input: List<String>): Int {
-        val x = parse(input)
-        return input.size
-    }
-
-
-
     val testInput = readInput("Day12Test")
     checkDebug(part1(testInput), 140)
-//    checkDebug(part2(testInput), 1)
 
     val testInput2 = readInput("Day12Test-2")
     checkDebug(part1(testInput2), 772)
@@ -70,5 +63,4 @@ fun main() {
 
     val input = readInput("Day12")
     "part1: ${part1(input)}".println()
-    "part2: ${part2(input)}".println()
 }
