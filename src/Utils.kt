@@ -1,3 +1,4 @@
+import java.math.BigInteger
 import kotlin.io.path.Path
 import kotlin.io.path.readText
 
@@ -52,3 +53,32 @@ operator fun LongPoint.plus(other: LongPoint) = first + other.first to second + 
 operator fun LongPoint.minus(other: LongPoint) = first - other.first to second - other.second
 @JvmName("LongPointTimes")
 operator fun LongPoint.times(other: Int) = first * other to second * other
+fun<T, S> Pair<T, S>.swap() = this.second to this.first
+
+fun lcm(a: Long, b: Long) = if (a == 0L || b == 0L) 0 else a * b / gcd(a, b)
+fun gcd(a: Long, b: Long): Long {
+    var aRegister = a
+    var bRegister = b
+    require(!(aRegister < 1 || bRegister < 1)) { "a or b is less than 1" }
+    var remainder: Int
+    do {
+        remainder = aRegister.toInt() % bRegister.toInt()
+        aRegister = bRegister
+        bRegister = remainder.toLong()
+    } while (bRegister != 0L)
+    return aRegister
+}
+
+//fun bigLCM(a: BigInteger, b: BigInteger) = if (a == BigInteger.ZERO || b == BigInteger.ZERO) BigInteger.ZERO else a * b / bigGCD(a, b)
+//fun bigGCD(a: BigInteger, b: BigInteger): BigInteger {
+//    var aRegister = a
+//    var bRegister = b
+//    require(!(aRegister < BigInteger.ONE || bRegister < BigInteger.ONE)) { "a or b is less than 1" }
+//    var remainder: BigInteger
+//    do {
+//        remainder = aRegister % bRegister
+//        aRegister = bRegister
+//        bRegister = remainder
+//    } while (bRegister != BigInteger.ZERO)
+//    return aRegister
+//}

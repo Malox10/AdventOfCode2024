@@ -32,16 +32,50 @@ fun main() {
         return score
     }
 
-    fun part2(input: List<String>): Int {
-        val x = parse(input)
-        return input.size
+    fun solveLinearSystem(a: LongPoint, b: LongPoint, result: LongPoint): LongPoint? {
+        val aLCM = lcm(a.first, a.second)
+        val firstMultiplier = aLCM / a.first
+        val secondMultiplier = aLCM / a.second
+
+        val newB = (b.second * secondMultiplier) - (b.first * firstMultiplier)
+        val newPrize = (result.second * secondMultiplier) - (result.first * firstMultiplier)
+        if(newB == 0L) return null //co-linear
+
+        val finalB = newPrize.toDouble() / newB.toDouble()
+        if(finalB % 1.0 != 0.0) return null //non-integer solution
+
+        val finalBLong = finalB.toLong()
+        val rightSide = result.first - (b.first * finalBLong)
+
+        val finalA = rightSide.toDouble() / a.first.toDouble()
+        if(finalA % 1.0 != 0.0) return null //non-integer solution
+
+        if(finalA <= 0 || finalBLong <= 0) return null
+
+        return finalA.toLong() to finalBLong
+    }
+
+    fun part2(input: List<String>): Long {
+        val games = parse(input, true)
+        return games.map { game ->
+            with(game) {
+                val solution = if(a.first < a.second) {
+                    solveLinearSystem(a, b, prize) ?: return@map 0
+                } else {
+                    solveLinearSystem(a.swap(), b.swap(), prize.swap()) ?: return@map 0
+                }
+
+                val score = (solution.first * 3) + solution.second
+                score
+            }
+        }.sum()
     }
 
 
 
     val testInput = readInput("Day13Test")
     checkDebug(part1(testInput), 480)
-//    checkDebug(part2(testInput), 1)
+//    checkDebug(part2(testInput), 480)
 
     val input = readInput("Day13")
     "part1: ${part1(input)}".println()
