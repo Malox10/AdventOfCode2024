@@ -44,3 +44,11 @@ enum class Direction(val offset: Point) {
     South(1 to 0),
     West(0 to -1)
 }
+
+typealias LongPoint = Pair<Long, Long>
+@JvmName("LongPointPlus")
+operator fun LongPoint.plus(other: LongPoint) = first + other.first to second + other.second
+@JvmName("LongPointMinus")
+operator fun LongPoint.minus(other: LongPoint) = first - other.first to second - other.second
+@JvmName("LongPointTimes")
+operator fun LongPoint.times(other: Int) = first * other to second * other
