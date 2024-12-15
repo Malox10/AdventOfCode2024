@@ -23,7 +23,7 @@ fun main() {
 
     fun part2(input: List<String>): Int {
         val (left, right) = parse(input)
-            .map { list -> list.toSet().associateWith { number -> list.count { it == number } } }
+            .map { it.counts() }
 
         return left.entries.sumOf { (key, count) -> key * count * (right[key] ?: 0) }
     }
