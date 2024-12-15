@@ -69,22 +69,12 @@ fun main() {
         return warehouse.solve()
     }
 
-    fun part2(input: List<String>): Int {
-        val x = parse(input)
-        return input.size
-    }
-
-
-
     val testInput = readInput("Day15Test")
     checkDebug(part1(testInput), 10092)
-//    checkDebug(part2(testInput), 1)
 
     val testInput2 = readInput("Day15Test2")
     checkDebug(part1(testInput2), 2028)
-//    checkDebug(part2(testInput2), 1)
 
     val input = readInput("Day15")
     "part1: ${part1(input)}".println()
-    "part2: ${part2(input)}".println()
 }
