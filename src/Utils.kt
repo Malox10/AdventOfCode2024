@@ -25,8 +25,9 @@ operator fun Pair<Int, Int>.plus(other: Pair<Int, Int>) = first + other.first to
 operator fun Pair<Int, Int>.minus(other: Pair<Int, Int>) = first - other.first to second - other.second
 operator fun Pair<Int, Int>.times(other: Int) = first * other to second * other
 operator fun<T> List<List<T>>.get(pair: Pair<Int, Int>): T? = this.getOrNull(pair.first)?.getOrNull(pair.second)
+operator fun<T> List<MutableList<T>>.set(pair: Pair<Int, Int>, value: T) = this.getOrNull(pair.first)?.set(pair.second, value)
 class LoopedList<T>(inner: List<T>) {
-    private var pointer = 0
+    var pointer = 0; private set
     private val list = inner
 
     fun next(): T {
