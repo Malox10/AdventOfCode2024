@@ -43,7 +43,16 @@ enum class Direction(val offset: Point) {
     North(-1 to 0),
     East(0 to 1),
     South(1 to 0),
-    West(0 to -1)
+    West(0 to -1);
+
+    fun neighbours(): List<Direction> {
+        return when(this) {
+            North -> listOf(West, East)
+            East -> listOf(North, South)
+            South -> listOf(East, West)
+            West -> listOf(South, North)
+        }
+    }
 }
 
 typealias LongPoint = Pair<Long, Long>
