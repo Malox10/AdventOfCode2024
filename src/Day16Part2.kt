@@ -27,7 +27,7 @@ fun main() {
     }
 
 
-    data class Node(val position: Point, val direction: Direction, val score: Int)
+    data class Node(val position: Point, val direction: Direction, val score: Int, val visitedTiles: List<Point>)
     fun Node.getNextNodes(maze: Maze): List<Node> {
         val newDirections = direction.neighbours() + direction
         return newDirections.mapNotNull { newDirection ->
@@ -37,22 +37,30 @@ fun main() {
             val nextPosition = position + newDirection.offset
             if(maze.grid[nextPosition] == Tile.Wall) return@mapNotNull null
 
-            Node(nextPosition, newDirection, newScore)
+            Node(nextPosition, newDirection, newScore, visitedTiles + nextPosition)
         }
     }
 
     fun Maze.aStar(): Int {
          val priorityQueue = PriorityQueue<Node>(compareBy { it.score })
-         priorityQueue.add(Node(start, Direction.East, 0))
+         priorityQueue.add(Node(start, Direction.East, 0, listOf(start)))
         val visitedNodes = mutableMapOf<Pair<Point, Direction>, Int>()
+
+        var endScore = 0
+        val optimalTiles = mutableSetOf<Point>()
 
          while(priorityQueue.isNotEmpty()) {
              val node = priorityQueue.remove()!!
-             if(grid[node.position] == Tile.End) return node.score
+             if(endScore > 0 && node.score > endScore) return optimalTiles.size
+
+             if(grid[node.position] == Tile.End) {
+                 if(endScore == 0) endScore = node.score
+                 optimalTiles.addAll(node.visitedTiles)
+             }
 
              val key = node.position to node.direction
              val value = visitedNodes[key]
-             if(value != null && value <= node.score) continue
+             if(value != null && value < node.score) continue
 
              val nextNodes = node.getNextNodes(this)
              priorityQueue.addAll(nextNodes)
@@ -62,23 +70,17 @@ fun main() {
         throw Error("No Path found")
     }
 
-    fun part1(input: List<String>): Int {
+    fun part2(input: List<String>): Int {
         val maze = parse(input)
         return maze.aStar()
     }
 
     val testInput = readInput("Day16Test")
-    checkDebug(part1(testInput), 7036)
+    checkDebug(part2(testInput), 45)
 
     val testInput2 = readInput("Day16Test2")
-    checkDebug(part1(testInput2), 11048)
+    checkDebug(part2(testInput2), 64)
 
     val input = readInput("Day16")
-    "part1: ${part1(input)}".println()
-}
-
-enum class Tile {
-    Floor,
-    Wall,
-    End
+    "part2: ${part2(input)}".println()
 }
