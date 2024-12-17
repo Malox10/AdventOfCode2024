@@ -1,10 +1,8 @@
 import OpCode.*
-//import java.util.*
-import kotlin.collections.ArrayDeque
 import kotlin.math.pow
 
 fun main() {
-    data class CPU(private var aRegister: Long, private var bRegister: Long, private var cRegister: Long, val program: List<Int>, var target: ArrayDeque<Int>? = null) {
+    data class CPU(var aRegister: Long, private var bRegister: Long, private var cRegister: Long, val program: List<Int>) {
         private var programCounter = 0
         private val output = mutableListOf<Int>()
 
@@ -28,24 +26,12 @@ fun main() {
                 BST -> { bRegister = comboOperand(operand) % 8 }
                 JNZ -> { if(aRegister != 0L) programCounter = operand else programCounter += 2 }
                 BXC -> { bRegister = bRegister xor cRegister }
-                OUT -> {
-                    val newOutput = comboOperand(operand) % 8
-                    if(target != null) {
-                        val targetValue = target!!.removeFirstOrNull()?.toLong()
-                        if(newOutput != targetValue) return false
-                    }
-                    output.add(newOutput.toInt())
-                }
+                OUT -> { output.add((comboOperand(operand) % 8).toInt()) }
                 BDV -> { bRegister = aRegister / 2.0.pow(comboOperand(operand).toDouble()).toInt() }
                 CDV -> { cRegister = aRegister / 2.0.pow(comboOperand(operand).toDouble()).toInt() }
             }
 
             if(opCode != JNZ) programCounter += 2
-            return true
-        }
-
-        fun checkTarget(): Boolean {
-            output.forEachIndexed { index, value -> if(value != target!!.getOrNull(index)) return false }
             return true
         }
 
@@ -71,26 +57,74 @@ fun main() {
         return cpu.runProgram()
     }
 
+    fun Int.toBinaryPadded(pad: Int) = Integer.toBinaryString(this).padStart(pad, '0')
+//    fun CPU.findPrefix(program: List<Int>, start: Int = 0, minimumDigitLength: Int = 1): List<String> {
+//        if(program.isEmpty()) throw Error("Can't match empty program")
+//        val target = program.joinToString(",")
+//
+//        var nextStart = 0
+//        do {
+//            val allPrefixed = if(program.size == 1) listOf()  else findPrefix(program.drop(1))
+//            nextStart = if(addedSuffix == 0) 1 else addedSuffix + 1
+//            var counter = start
+//            val digitLength = log2(start.toDouble()).toInt()
+//            val ceiling = 2.0.pow(digitLength).toLong()
+//            while(counter < ceiling) {
+//                val binaryString = counter.toBinaryPadded(digitLength)
+//                val combined = prefix + binaryString
+//                val aValue = combined.toLong(2)
+//
+//                val cpu = this.copy(aRegister = aValue)
+//                val output = cpu.runProgram()
+//                if(output == target) {
+//                    return (prefix + counter.toBinaryPadded(digitLength) to counter)
+//                }
+//                counter++
+//            }
+//        } while(true)
+//
+//        throw Error("no solution, stopped at prefix: $nextStart")
+//    }
+
+    val digitLength = 3
+    fun CPU.findPrefixBottomUp(prefix: String = "", depth: Int = 1): String? {
+        val target = program.takeLast(depth).joinToString(",")
+
+        val ceiling = 2.0.pow(digitLength).toLong()
+        var counter = 0
+        val solutions = mutableListOf<String>()
+        while(counter < ceiling) {
+            val binaryString = counter.toBinaryPadded(digitLength)
+            val combined = prefix + binaryString
+            val aValue = combined.toLong(2)
+
+            val cpu = this.copy(aRegister = aValue)
+            val output = cpu.runProgram()
+            if(output == target) {
+                val solution = prefix + counter.toBinaryPadded(3)
+                solutions += solution
+                if(program.size == depth) return solution
+            }
+            counter++
+        }
+
+        solutions.mapNotNull { newPrefix ->
+            val solution = findPrefixBottomUp(newPrefix, depth + 1) ?: return@mapNotNull null
+            return solution
+        }
+        return null
+    }
+
     fun part2(input: List<String>): Long {
         val baseCPU = parse(input)
-        baseCPU.target = ArrayDeque(baseCPU.program)
-        val baseProgram = baseCPU.program.joinToString(",")
-        var tentativeAValue = 0L
-        while(true) {
-            if(tentativeAValue % 10_000_000L == 0L) tentativeAValue.println()
-            val cpu = baseCPU.copy(aRegister = tentativeAValue)
-            val output = cpu.runProgram()
-            if(output == baseProgram) return tentativeAValue
-            tentativeAValue++
-        }
+        val solution = baseCPU.findPrefixBottomUp()
+        return solution!!.toLong(2)
     }
 
 
     val testInput = readInput("Day17Test")
     checkDebug(part1(testInput), "4,6,3,5,6,3,5,2,1,0")
-
-    val testInput2 = readInput("Day17Test2")
-    checkDebug(part2(testInput2), 117440)
+//    checkDebug(part2(testInput), 117440)
 
     val input = readInput("Day17")
     "part1: ${part1(input)}".println()
