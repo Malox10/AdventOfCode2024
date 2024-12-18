@@ -22,42 +22,47 @@ fun main() {
         }
     }
 
-    fun aStar(errors: Set<Point>, end: Point = 70 to 70): Int {
+    fun aStar(errors: Set<Point>, end: Point = 70 to 70): Int? {
         val priorityQueue = PriorityQueue<Node>(compareBy { it.score })
         priorityQueue.add(Node(Point(0, 0), 0, 0))
         val closedNodes = mutableMapOf<Point, Int>()
 
         while(priorityQueue.isNotEmpty()) {
-            val node = priorityQueue.remove()
-            if(node.point == end) return node.steps
-            val neighbours = node.getNeighbours(errors, end)
+            val currentNode = priorityQueue.remove()
+            if(currentNode.point == end) return currentNode.steps
+            val neighbours = currentNode.getNeighbours(errors, end)
                 .filter { node ->
                     val value = closedNodes[node.point] ?: return@filter true
                     value > node.steps
                 }
             //add filtering by closedNodes here
             priorityQueue.addAll(neighbours)
-            closedNodes[node.point] = node.steps
+            closedNodes[currentNode.point] = currentNode.steps
         }
 
-        throw Error("no finish found")
+        return null
     }
 
     fun part1(input: List<String>, end: Point = 70 to 70, errorCount: Int = 1024): Int {
         val errors = parse(input).take(errorCount)
-        return aStar(errors.toSet(), end)
+        return aStar(errors.toSet(), end)!!
     }
 
-    fun part2(input: List<String>): Int {
-        val x = parse(input)
-        return input.size
+    fun part2(input: List<String>, end: Point = 70 to 70): String {
+        var counter = 0
+        while(true) {
+            counter.println()
+            counter++
+            val errors = parse(input).take(counter)
+            aStar(errors.toSet(), end) ?: return errors[counter - 1].let { (a, b) -> "$a,$b" }
+        }
     }
 
 
 
     val testInput = readInput("Day18Test")
     checkDebug(part1(testInput, 6 to 6, 12), 22)
-//    checkDebug(part2(testInput), 1)
+    checkDebug(part2(testInput, 6 to 6), "6,1")
     println("test done")
 
     val input = readInput("Day18")
