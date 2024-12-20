@@ -13,6 +13,7 @@ fun Any?.println() = println(this)
 fun<T> checkDebug(actual: T, expected: T) {
     try {
         check(actual == expected)
+        println("test passed with result: $actual")
     } catch (e: Throwable) {
         println("expected: $expected\nactual: $actual")
         throw e
