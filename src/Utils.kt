@@ -91,3 +91,9 @@ fun gcd(a: Long, b: Long): Long {
 //    } while (bRegister != BigInteger.ZERO)
 //    return aRegister
 //}
+
+fun<T> Point.isInside(grid: List<List<T>>): Boolean {
+    if(first < 0 || second < 0) return false
+    if(first >= grid.size || second >= grid[0].size) return false
+    return true
+}
