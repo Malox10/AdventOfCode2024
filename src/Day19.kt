@@ -102,7 +102,7 @@ fun main() {
             println("x")
             pattern.length.solveMap(towelMatches)
         }.count { it }
-//        return patterns.map { println("x"); tree.solve(it, tree) }.count { it }
+//        }.filter { !it.second }.joinToString("\n") { it.first }.println()
     }
 
     fun part2(input: List<String>): Int {
