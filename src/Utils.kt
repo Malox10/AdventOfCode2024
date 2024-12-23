@@ -103,3 +103,12 @@ fun<T> Point.isInside(grid: List<List<T>>): Boolean {
     if(first >= grid.size || second >= grid[0].size) return false
     return true
 }
+
+fun<Key, Item> MutableMap<Key, MutableList<Item>>.addToList(key: Key, item: Item) {
+    val value = this[key]
+    if(value == null) {
+        this[key] = mutableListOf(item)
+    } else {
+        value.add(item)
+    }
+}
