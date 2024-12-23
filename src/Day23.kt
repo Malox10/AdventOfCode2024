@@ -24,7 +24,7 @@ fun main() {
         }
     }
 
-    fun part1(input: List<String>): Int {
+    fun part1(input: List<String>, isPartTwo: Boolean = false): Set<Set<String>> {
         val (map, links) = parse(input)
         val tTriples = links.flatMap { link ->
             val candidates = map[link.first]!! + map[link.second]!!
@@ -32,26 +32,56 @@ fun main() {
                 if (link.toList() == candidate.toList()) return@mapNotNull null
                 links.findTriple(link, candidate) ?: return@mapNotNull null
             }
-            triples.filter { links ->
-                links.any { it.startsWith("t") }
+            if(isPartTwo) {
+                triples
+            } else {
+                triples.filter { links ->
+                    links.any { it.startsWith("t") }
+                }
             }
         }
         val tTriplesSet = tTriples.toSet()
-        return tTriplesSet.size
+        return tTriplesSet
     }
 
-    fun part2(input: List<String>): Int {
-        val x = parse(input)
-        return input.size
+    //grows the loop or returns null if it couldn't
+    fun growLoop(links: Set<String>, map: Map<String, Links>, allLinks: Set<Pair<String, String>>): Set<String>? {
+        val inside = links.first()
+        val candidates = map[inside] ?: return null
+        val filtered = candidates
+            .filter { (a, b) -> links.contains(a) xor links.contains(b) }
+        if(filtered.isEmpty()) return null
+        filtered.forEach { newLink ->
+            val newElement = if(newLink.first == inside) newLink.second else newLink.first
+            if(links.all { other -> allLinks.contains(newElement to other)}) {
+                return links + newElement
+            }
+        }
+
+        return null
+    }
+
+    fun Set<String>.password() = this.sorted().joinToString(",")
+    fun part2(input: List<String>): String {
+        val (map, links) = parse(input)
+        val triples = part1(input, true)
+        var loopsToGrow = triples
+        var biggestLoop = triples.first()
+        do {
+            val grownLoops = loopsToGrow.mapNotNull { growLoop(it, map, links) }.toSet()
+            if(grownLoops.isNotEmpty()) biggestLoop = grownLoops.first()
+            loopsToGrow = grownLoops
+        } while(grownLoops.isNotEmpty())
+        return biggestLoop.password()
     }
 
 
     val testInput = readInput("Day23Test")
-    checkDebug(part1(testInput), 7)
-//    checkDebug(part2(testInput), 1)
+    checkDebug(part1(testInput).size, 7)
+//    checkDebug(part2(testInput), "co,de,ka,ta")
 
     val input = readInput("Day23")
-    "part1: ${part1(input)}".println()
+    "part1: ${part1(input).size}".println()
     "part2: ${part2(input)}".println()
 }
 
