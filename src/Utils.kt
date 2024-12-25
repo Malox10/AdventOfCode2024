@@ -39,7 +39,6 @@ class LoopedList<T>(inner: List<T>) {
 }
 
 typealias Point = Pair<Int, Int>
-fun<T> Iterable<T>.counts() = this.toSet().associateWith { number -> this.count { it == number } }
 enum class Direction(val offset: Point, val arrow: Char) {
     North(-1 to 0, '^'),
     East(0 to 1, '>'),
@@ -111,4 +110,21 @@ fun<Key, Item> MutableMap<Key, MutableList<Item>>.addToList(key: Key, item: Item
     } else {
         value.add(item)
     }
+}
+
+fun<Key> MutableMap<Key, Int>.addToCount(key: Key) {
+    val value = this[key]
+    if(value == null) {
+        this[key] = 1
+    } else {
+        this[key] = value + 1
+    }
+}
+
+fun<T> Iterable<T>.counts(): Map<T, Int> {
+    val map = mutableMapOf<T, Int>()
+    this.forEach { item ->
+        map.addToCount(item)
+    }
+    return map
 }
