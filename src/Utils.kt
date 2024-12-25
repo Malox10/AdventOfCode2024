@@ -128,3 +128,6 @@ fun<T> Iterable<T>.counts(): Map<T, Int> {
     }
     return map
 }
+
+fun <T> List<List<T>>.transpose(): List<List<T>> = this.first().indices.map { i -> this.map { it[i] } }
+typealias Tuple<T> = Pair<T, T>
