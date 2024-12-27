@@ -112,12 +112,12 @@ fun<Key, Item> MutableMap<Key, MutableList<Item>>.addToList(key: Key, item: Item
     }
 }
 
-fun<Key> MutableMap<Key, Int>.addToCount(key: Key) {
+fun<Key> MutableMap<Key, Int>.addToCount(key: Key, amount: Int = 1) {
     val value = this[key]
     if(value == null) {
-        this[key] = 1
+        this[key] = amount
     } else {
-        this[key] = value + 1
+        this[key] = value + amount
     }
 }
 
@@ -125,6 +125,23 @@ fun<T> Iterable<T>.counts(): Map<T, Int> {
     val map = mutableMapOf<T, Int>()
     this.forEach { item ->
         map.addToCount(item)
+    }
+    return map
+}
+
+fun<Key> MutableMap<Key, Long>.addToCountLong(key: Key, amount: Long = 1L) {
+    val value = this[key]
+    if(value == null) {
+        this[key] = amount
+    } else {
+        this[key] = value + amount
+    }
+}
+
+fun<T> Iterable<T>.countsLong(): Map<T, Long> {
+    val map = mutableMapOf<T, Long>()
+    this.forEach { item ->
+        map.addToCountLong(item)
     }
     return map
 }
